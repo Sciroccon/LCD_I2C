@@ -71,8 +71,8 @@ void I2C_Stop(){
 void LCD_Write_Cmd8bit(uint8_t DevAddr,uint8_t data){ // bajagi jer LCD starta u 8bitnom modu treba slat samo upper dio 8bitne komande
 uint8_t data_h,d1,d2;
 data_h=(data & 0xF0);
-d1=data_h | 0x0C; 		// Blacklight_enable,	E enable  D7 D6 D5 D4 B E RW RS 
-d2=data_h | 0x08; 		// Isto samo bez E enable
+d1=data_h | 0x04; 		// Blacklight_enable,	E enable  D7 D6 D5 D4 B E RW RS 
+d2=data_h | 0x00; 		// Isto samo bez E enable
 
 I2C_Start();
 I2C_Send_Addr(DevAddr);	// Prvo se salje adresa slave uredjaja kao prvi bajt prijenosa
@@ -82,10 +82,10 @@ I2C_Write(0x00);		// RS,RW I E u nepoznatom stanju na pocetku postavljaju se na 
 // F-ija za slanje podataka LCDa u 8bitnom modu,
 // posalju se gornja 4 bita, sa E 1, i ponovo se salje taj isti gornji dio samo sa E pinom na 0
 I2C_Write(d1);
-TIM4_ms_Delay(1);
+TIM4_ms_Delay(2);
 I2C_Write(d2);
 
-TIM4_ms_Delay(1);
+TIM4_ms_Delay(2);
 I2C_Stop();
 printUSART2("Init komande 8 bit");
 }
@@ -96,11 +96,11 @@ void LCD_Write_Cmd4bit(uint8_t DevAddr,uint8_t data)
 	data_h=(data & 0xF0);
 	data_l=((data<<4) & 0xF0);
 
-	d1=data_h | 0x0C;
-	d2=data_h | 0X08;	
+	d1=data_h | 0x04; // 1100
+	d2=data_h | 0X00;	
 
-	d3=data_l | 0X0C;
-	d4=data_l | 0X08;
+	d3=data_l | 0X04;
+	d4=data_l | 0X00;
 
 	I2C_Start();
 	I2C_Send_Addr(DevAddr); 		
@@ -108,16 +108,16 @@ void LCD_Write_Cmd4bit(uint8_t DevAddr,uint8_t data)
 
 
 	I2C_Write(d1);
-	TIM4_ms_Delay(1);
+	TIM4_ms_Delay(2);
 	I2C_Write(d2);
 
-	TIM4_ms_Delay(1);
+	TIM4_ms_Delay(2);
 
 	I2C_Write(d3);
-	TIM4_ms_Delay(1);
+	TIM4_ms_Delay(2);
 	I2C_Write(d4);
 
-	TIM4_ms_Delay(1);
+	TIM4_ms_Delay(2);
 	I2C_Stop();
 	printUSART2("Proslo CMD slanje");
 }
@@ -128,11 +128,11 @@ void LCD_Write_Data(uint8_t DevAddr,uint8_t data)
 	data_h=data & 0xF0;
 	data_l=(data<<4) & 0xF0;
 
-	d1=data_h | 0X0D;
-	d2=data_h | 0X09;	
+	d1=data_h | 0X05;
+	d2=data_h | 0X01;	
 
-	d3=data_l | 0X0D;
-	d4=data_l | 0X09;
+	d3=data_l | 0X05;
+	d4=data_l | 0X01;
 
 	I2C_Start();
 	I2C_Send_Addr(DevAddr); 			// Prvo se salje adresa slave uredjaja
@@ -140,16 +140,16 @@ void LCD_Write_Data(uint8_t DevAddr,uint8_t data)
 
 
 	I2C_Write(d1);
-	TIM4_ms_Delay(1);
+	TIM4_ms_Delay(2);
 	I2C_Write(d2);
 
-	TIM4_ms_Delay(1);
+	TIM4_ms_Delay(2);
 
 	I2C_Write(d3);
-	TIM4_ms_Delay(1);
+	TIM4_ms_Delay(2);
 	I2C_Write(d4);
 
-	TIM4_ms_Delay(1);
+	TIM4_ms_Delay(2);
 	I2C_Stop();
 	printUSART2("Proslo DATA slanje");
 }
@@ -157,34 +157,19 @@ void LCD_Write_Data(uint8_t DevAddr,uint8_t data)
 
 void LCD_Init(){
     // 1. Inicijalizacijske funkcije za LCD --- pocinje raditi u 8 bitnom modu, te se moraju slati 8bitne komande
-	TIM4_ms_Delay(100);
-    LCD_Write_Cmd8bit(LCD_ADDR,0x30);
-	TIM4_ms_Delay(5);
-    LCD_Write_Cmd8bit(LCD_ADDR,0x30);
-	TIM4_ms_Delay(1);
-    LCD_Write_Cmd8bit(LCD_ADDR,0x30);
+	TIM4_ms_Delay(150);
+    LCD_Write_Cmd8bit(LCD_ADDR,0x33);
 	TIM4_ms_Delay(10);
-    LCD_Write_Cmd8bit(LCD_ADDR,0x20); // Set the LCD in 4-bit Mode
-	TIM4_ms_Delay(10);
+	LCD_Write_Cmd8bit(LCD_ADDR,0x32);
 
-	
-    // 2. Inicijalizacija samog displeja --- Postavke za displej
+	//
+	TIM4_ms_Delay(5);
+	LCD_Write_Cmd4bit(LCD_ADDR,0x0C);
+	TIM4_ms_Delay(5);
+	LCD_Write_Cmd4bit(LCD_ADDR,0x01);
+	TIM4_ms_Delay(5);
+	LCD_Write_Cmd4bit(LCD_ADDR,0x06);
 
-    // Function Set (DL=0 for 4-bit mode; N=1 for 2-line display;
-    // F=0 for 5x8 characters)
-    LCD_Write_Cmd4bit(LCD_ADDR,0x28);
-	TIM4_ms_Delay(5);
-    // Display Control (D=0;C=0;B=0 - Display is off)
-    LCD_Write_Cmd4bit(LCD_ADDR,0x08);
-	TIM4_ms_Delay(5);
-    // Clear the display
-    LCD_Write_Cmd4bit(LCD_ADDR,0x01);
-    // Set Entry Mode (ID=1 for incrementing cursor and S=0 for no shift)
-    LCD_Write_Cmd4bit(LCD_ADDR,0x06);
-	TIM4_ms_Delay(5);
-    // Display Control (D=1;C=0;B=0 - Cursor blinks)
-    LCD_Write_Cmd4bit(LCD_ADDR,0x0F);
-	TIM4_ms_Delay(5);
 }
 
 
