@@ -9,7 +9,7 @@ STM_COMMON=../../../STM32F407
 
 # Put your source files here (or *.c, etc)
 SRCS = main.c 
-SRCS += system_stm32f4xx.c led.c 
+SRCS += system_stm32f4xx.c lcd.c 
 SRCS += delay.c usart.c
 SRCS += misc.c
 

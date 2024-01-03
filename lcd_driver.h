@@ -3,19 +3,12 @@
 
 #include "stdint.h"
 
-/* LCD control pins */
-#define PIN_RS                 (1 << 0)
-#define PIN_EN                 (1 << 2)
-#define BACKLIGHT              (1 << 3)
 
-/* I2C Module Address, this is Hardware dependent */
-
-#define LCD_ADDR (0x4E)
-#define INST_REG (0x00)
-#define DATA_REG (0x40)
+/* I2C Adresa uredjaja, zavisi od varijante PCF8574 cipa,A(7E),T(4E) */
+#define LCD_ADDR (0x7E)
 
 
-/*LCD Commands*/
+/* LCD komande */
 #define LCD_FUNCTION_SET1      0x33
 #define LCD_FUNCTION_SET2      0x32
 #define LCD_4BIT_2LINE_MODE    0x28
@@ -37,6 +30,8 @@ void LCD_Write_Cmdbitbit(uint8_t DevAddr, uint8_t data);
 void LCD_Write_Data(uint8_t DevAddr,uint8_t data);
 void LCD_Init();
 void LCD_Cursor(int r, int c);
+void LCD_Send_String (char *str);
+
 
 
 
