@@ -6,9 +6,12 @@
 
 
 
+
 int main(void){
+
+
     I2C_Conf();
     LCD_Init();
-    LCD_Send_String("Hello World");
-    return 0;
+    LCD_Send_String("Kako ste mi dns u Tz");
+return 0;
 }

@@ -4,7 +4,7 @@
 #include "stdint.h"
 
 
-/* I2C Adresa uredjaja, zavisi od varijante PCF8574 cipa,A(7E),T(4E) */
+/* I2C device address, depends on model of the PCF8574 chip,A(7E),T(4E) */
 #define LCD_ADDR (0x7E)
 
 
@@ -13,7 +13,7 @@
 #define LCD_FUNCTION_SET2      0x32
 #define LCD_4BIT_2LINE_MODE    0x28
 #define LCD_DISP_CURS_ON       0x0E
-#define LCD_DISP_ON_CURS_OFF   0x0C  //Display on, cursor off
+#define LCD_DISP_ON_CURS_OFF   0x0C  
 #define LCD_DISPLAY_OFF        0x08
 #define LCD_DISPLAY_ON         0x04
 #define LCD_CLEAR_DISPLAY      0x01
@@ -31,11 +31,6 @@ void LCD_Write_Data(uint8_t DevAddr,uint8_t data);
 void LCD_Init();
 void LCD_Cursor(int r, int c);
 void LCD_Send_String (char *str);
-
-
-
-
-
 #endif
 
 

@@ -13,7 +13,6 @@ SRCS += system_stm32f4xx.c lcd.c
 SRCS += delay.c usart.c
 SRCS += misc.c
 
-
 # Normally you shouldn't need to change anything below this line!
 #######################################################################################
 GNUGCC = $(STM_COMMON)/gcc-arm-none-eabi/bin
